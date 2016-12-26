@@ -1,0 +1,63 @@
+version: '2'
+services:
+ sonarr:
+  build: 
+   context: https://github.com/linuxserver/docker-sonarr.git
+  ports:
+   - "8989:8989"
+  volumes:
+   - /dev/rtc:/dev/rtc:ro
+   - /opt/docker_config/sonarr:/config
+ 
+ transmission:
+  build:
+   context: https://github.com/linuxserver/docker-transmission.git
+  volumes:
+   - /opt/docker_config/transmission:/config
+  environment:
+   - TZ=Europe/Brussels
+  ports:
+   - "9091:9091"
+   - "51413:51413"
+   - "51413:51413/udp"
+
+ sabnzbd:
+  build:
+   context: https://github.com/linuxserver/docker-sabnzbd.git
+  ports:
+   - "8080:8080"
+   - "9090:9090"
+  volumes:
+   - /opt/docker_config/sabnzbd:/config
+  environment:
+   - TZ=Europe/Brussels
+
+ plex:
+  build:
+   context: https://github.com/linuxserver/docker-plex.git
+  network_mode: "host"
+  volumes:
+   - /opt/docker_config/plex:/config
+  environment:
+   - VERSION=latest
+   - TZ=Europe/Brussels
+  
+ couchpotato:
+  build:
+   context: https://github.com/linuxserver/docker-couchpotato.git
+  ports:
+   - "5050:5050"
+  volumes:
+   - /opt/docker_config/couchpotato:/config
+  environment:
+   - TZ=Europe/Brussels
+
+ hydra:
+  build:
+   context: https://github.com/linuxserver/docker-hydra.git
+  ports:
+   - "5075:5075"
+  volumes:
+   - /opt/docker_config/hydra:/config
+  environment:
+   - TZ=Europe/Brussels   
