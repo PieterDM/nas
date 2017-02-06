@@ -8,18 +8,25 @@ services:
   volumes:
    - /dev/rtc:/dev/rtc:ro
    - /opt/docker_config/sonarr:/config
+   - /mnt/data:/mnt/data
+   - /mnt/data5:/mnt/data5
+  networks:
+   - main
  
  transmission:
   build:
    context: https://github.com/linuxserver/docker-transmission.git
   volumes:
    - /opt/docker_config/transmission:/config
+   - /mnt/data:/mnt/data
   environment:
    - TZ=Europe/Brussels
   ports:
    - "9091:9091"
    - "51413:51413"
    - "51413:51413/udp"
+  networks:
+   - main
 
  sabnzbd:
   build:
@@ -29,8 +36,11 @@ services:
    - "9090:9090"
   volumes:
    - /opt/docker_config/sabnzbd:/config
+   - /mnt/data:/mnt/data
   environment:
    - TZ=Europe/Brussels
+  networks:
+   - main
 
  plex:
   build:
@@ -38,6 +48,7 @@ services:
   network_mode: "host"
   volumes:
    - /opt/docker_config/plex:/config
+   - /mnt:/mnt
   environment:
    - VERSION=latest
    - TZ=Europe/Brussels
@@ -49,8 +60,12 @@ services:
    - "5050:5050"
   volumes:
    - /opt/docker_config/couchpotato:/config
+   - /mnt/data:/mnt/data
+   - /mnt/data5:/mnt/data5
   environment:
    - TZ=Europe/Brussels
+  networks:
+   - main
 
  hydra:
   build:
@@ -61,3 +76,11 @@ services:
    - /opt/docker_config/hydra:/config
   environment:
    - TZ=Europe/Brussels   
+  networks:
+   - main
+
+networks:
+ main:
+  driver: bridge
+  driver_opts:
+   com.docker.network.bridge.host_binding_ipv4: "192.168.0.5"
